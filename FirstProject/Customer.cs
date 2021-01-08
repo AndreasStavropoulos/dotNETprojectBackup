@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FirstProject
+﻿namespace FirstProject
 {
     internal enum Gender
     { male, female }

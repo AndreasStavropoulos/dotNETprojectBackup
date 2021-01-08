@@ -33,11 +33,9 @@ namespace FirstProject
 
                 case 2:
                     OrderMenu();
-                    //CheckOut method
                     break;
 
                 case 3:
-
                     ModifyMenu();
                     break;
 
@@ -69,10 +67,6 @@ namespace FirstProject
             Console.WriteLine("Our movies: ");
             ShowMovieCatalog();
             WriteOrderToFile();
-
-            //Movie selectedMovie = SelectAMovie();
-            //MoviesInTheCart.Add(selectedMovie);
-            //SelectMoreMovies();
         }
 
         private void ShowMovieCatalog()
@@ -107,9 +101,7 @@ namespace FirstProject
         {
             using StreamReader reader = new StreamReader(path);
             string line = string.Empty;
-
             List<string> movies = new List<string>();
-
             while ((line = reader.ReadLine()) != null)
             {
                 movies.Add(line);
@@ -355,7 +347,6 @@ namespace FirstProject
 
         private void CreateOrder(Order order)
         {
-            //string line = ($" { movie.Id },{ movie.Name },{ movie.Genre },{ movie.Duration },{ movie.Price },{ movie.YearOfProduction }");
             FileManager fileManager = new FileManager();
             string line = ($"{order.ID}, {order.OrderTime}, {order.OrderedItemID}, {order.TotalPrice} ");
             fileManager.WriteDataToFile(line, ORDERPATH);
