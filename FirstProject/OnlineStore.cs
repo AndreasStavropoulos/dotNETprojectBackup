@@ -22,8 +22,7 @@ namespace FirstProject
                 "\n3. Movies Overview and Modify" +
                 "\n4. Make An Account" +
                 "\n5. Exit");
-
-            //int userInputtemp = Convert.ToInt32(Console.ReadLine());
+            
             string userInputtemp = Console.ReadLine();
             int userInput = IsItAnInteger(userInputtemp);
 
