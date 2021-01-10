@@ -497,23 +497,5 @@ namespace FirstProject
             Console.ResetColor();
         }
 
-        public int StartingIdNumber()
-        {
-            int startingNumber;
-
-            if (!File.Exists("C:\\Dev\\Movies.txt"))
-            {
-                startingNumber = 1;
-            }
-            else
-            {
-                OnlineStore onlineStore = new OnlineStore();
-                List<string> myMovies = onlineStore.RetriveMovieLog("C:\\Dev\\Movies.txt");
-                string[] myFirstMovie = myMovies[0].Split(',');
-                startingNumber = int.Parse(myFirstMovie[0]);
-
-            }
-            return startingNumber;
-        }
     }
 }
