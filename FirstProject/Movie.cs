@@ -1,4 +1,7 @@
-﻿namespace FirstProject
+﻿using System.Collections.Generic;
+using System.IO;
+
+namespace FirstProject
 {
     internal class Movie
     {
@@ -9,7 +12,7 @@
         public int Duration { get; set; }
         public int YearOfProduction { get; set; }
 
-        private static int startingIdnumber = 1;
+        private static int startingIdnumber = StartingNumber();
 
         public Movie()
         {
@@ -22,6 +25,7 @@
             Price = price;
             Duration = duration;
             YearOfProduction = yearOfProduction;
+
             Id = startingIdnumber;
             startingIdnumber++;
         }
@@ -34,6 +38,24 @@
             Duration = duration;
             YearOfProduction = yearOfProduction;
             Id = id;
+        }
+
+        public static int StartingNumber()
+        {
+            int startingNumber;
+
+            if (!File.Exists("C:\\Dev\\Movies.txt"))
+            {
+                startingNumber = 1;
+            }
+            else
+            {
+                OnlineStore onlineStore = new OnlineStore();
+                List<string> myMovies = onlineStore.RetriveMovieLog("C:\\Dev\\Movies.txt");
+                string[] myLastMovie = myMovies[myMovies.Count - 1].Split(',');
+                startingNumber = int.Parse(myLastMovie[0]) + 1;
+            }
+            return startingNumber;
         }
     }
 }

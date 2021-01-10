@@ -23,7 +23,9 @@ namespace FirstProject
                 "\n4. Make An Account" +
                 "\n5. Exit");
 
-            int userInput = Convert.ToInt32(Console.ReadLine());
+            //int userInputtemp = Convert.ToInt32(Console.ReadLine());
+            string userInputtemp = Console.ReadLine();
+            int userInput = IsItAnInteger(userInputtemp);
 
             switch (userInput)
             {
@@ -50,6 +52,7 @@ namespace FirstProject
                 default:
                     Console.Clear();
                     ErrorMessage("Please give a valid answer", 1000);
+                    Console.Clear();
                     MainMenu();
                     break;
             }
@@ -97,7 +100,7 @@ namespace FirstProject
             return movieCatalog;
         }
 
-        private List<string> RetriveMovieLog(string path)
+        public List<string> RetriveMovieLog(string path)
         {
             using StreamReader reader = new StreamReader(path);
             string line = string.Empty;
@@ -115,11 +118,16 @@ namespace FirstProject
             foreach (Movie movie in movies1)
             {
                 string duration = ToTimeString(movie.Duration);
-                Console.WriteLine($"{movie.Id}:{movie.Name} Genre:{movie.Genre} Duration:{duration} Price:{movie.Price} euros Year:{movie.YearOfProduction}");
+                Console.WriteLine($"" +
+                    $"{movie.Id}:{movie.Name} " +
+                    $"Genre:{movie.Genre} " +
+                    $"Duration:{duration} " +
+                    $"Price:{movie.Price} euros " +
+                    $"Year:{movie.YearOfProduction}");
             }
         }
 
-        public string ToTimeString(int totalMinutes)
+        private string ToTimeString(int totalMinutes)
         {
             int hours = totalMinutes / 60;
             int minutes = totalMinutes % 60;
@@ -187,7 +195,8 @@ namespace FirstProject
             string inputDurationtemp = Console.ReadLine();
             int inputDuration = IsItAnInteger(inputDurationtemp);
             Console.Write("Year of production: ");
-            int inputYear = int.Parse(Console.ReadLine());
+            string inputYeartemp = Console.ReadLine();
+            int inputYear = IsItAnInteger(inputYeartemp);
             Movie myMovie = new Movie(inputName, inputGenre, inputPrice, inputDuration, inputYear);
             return myMovie;
         }
@@ -209,21 +218,21 @@ namespace FirstProject
             return inputPrice;
         }
 
-        private int IsItAnInteger(string inputDurationtemp)
+        private int IsItAnInteger(string input)
         {
-            int inputDuration;
-            if (!int.TryParse(inputDurationtemp, out inputDuration))
+            int output;
+            if (!int.TryParse(input, out output))
             {
                 Console.WriteLine("Give the correct input.");
-                inputDurationtemp = Console.ReadLine();
-                inputDuration = IsItAnInteger(inputDurationtemp);
+                input = Console.ReadLine();
+                output = IsItAnInteger(input);
             }
             else
             {
-                inputDuration = int.Parse(inputDurationtemp);
+                output = int.Parse(input);
             }
 
-            return inputDuration;
+            return output;
         }
 
         private void ModifyFile()
@@ -269,11 +278,13 @@ namespace FirstProject
                             break;
 
                         case "C":
+                            Console.Clear();
                             MainMenu();
                             break;
 
                         default:
                             ErrorMessage("Give a correct input", 1000);
+                            Console.Clear();
                             ModifyFile();
 
                             break;
@@ -303,6 +314,7 @@ namespace FirstProject
                     break;
 
                 case "E":
+                    Console.Clear();
                     MainMenu();
                     break;
 
@@ -338,24 +350,23 @@ namespace FirstProject
 
         private void PrintUpdatedMovieCatalog(List<Movie> movies)
         {
-            Console.WriteLine("This is the updated Movie catalog");
+            Console.WriteLine("This is the updated price Movie catalog");
             foreach (Movie movie in movies)
             {
-                Console.WriteLine($"{movie.Name} nee price: {movie.Price}");
+                Console.WriteLine($"Title:{movie.Name} Price:{movie.Price}");
             }
         }
 
         private void CreateOrder(Order order)
         {
             FileManager fileManager = new FileManager();
-            string line = ($"{order.ID}, {order.OrderTime}, {order.OrderedItemID}, {order.TotalPrice} ");
+            string line = ($"OrderID:{order.ID}, Date:{order.OrderTime}, ItemID:{order.OrderedItemID}, Price of Order:{order.TotalPrice} ");
             fileManager.WriteDataToFile(line, ORDERPATH);
         }
 
         private void WriteOrderToFile()
         {
             Order order = PickAMovie();
-            CreateOrder(order);
         }
 
         private void MakeAnAccount()
@@ -404,35 +415,56 @@ namespace FirstProject
 
         private Order PickAMovie()
         {
+            int number;
             Console.WriteLine("Choose a movie: (Press E to exit.)");
-            string userinput = Console.ReadLine();
+            string userinput = (Console.ReadLine());
             Order order = new Order();
             List<Movie> movies = CreateMovieCatalog();
+
+            List<int> MovieIds = new List<int>();
             foreach (Movie movie in movies)
             {
-                if (userinput.ToUpper() == "E")
+                MovieIds.Add(movie.Id);
+            }
+
+            foreach (Movie movie in movies)
+            {
+                if (!int.TryParse(userinput, out number))
                 {
-                    Console.Clear();
-                    MainMenu();
-                }
-                else if (int.Parse(userinput) == movie.Id)
-                {
-                    Console.WriteLine($"This is Your Order: ");
-                    Console.WriteLine("----------------------");
-                    Console.WriteLine($"Name: {movie.Name}");
-                    Console.WriteLine($"Genre : {movie.Genre}");
-                    string duration = ToTimeString(movie.Duration);
-                    Console.WriteLine($"Duration: {duration}");
-                    Console.WriteLine($"Year Of Production: {movie.YearOfProduction}");
-                    Console.WriteLine($"Total price to pay: {movie.Price}");
-                    order = new Order(movie.Id, movie.Price);
-                    GoToPayment();
+                    if (userinput.ToUpper() == "E")
+                    {
+                        Console.Clear();
+                        MainMenu();
+                    }
+                    else
+                    {
+                        ErrorMessage("Give a correct input", 1000);
+                        Console.Clear();
+                        OrderMenu();
+                    }
                 }
                 else
                 {
-                    ErrorMessage("Give a correct input", 1000);
-                    Console.Clear();
-                    OrderMenu();
+                    if (int.Parse(userinput) == movie.Id)
+                    {
+                        Console.WriteLine($"This is Your Order: ");
+                        Console.WriteLine("----------------------");
+                        Console.WriteLine($"Name: {movie.Name}");
+                        Console.WriteLine($"Genre : {movie.Genre}");
+                        string duration = ToTimeString(movie.Duration);
+                        Console.WriteLine($"Duration: {duration}");
+                        Console.WriteLine($"Year Of Production: {movie.YearOfProduction}");
+                        Console.WriteLine($"Total price to pay: {movie.Price}");
+                        order = new Order(movie.Id, movie.Price);
+                        CreateOrder(order);
+                        GoToPayment();
+                    }
+                    else if (!MovieIds.Contains(int.Parse(userinput)))
+                    {
+                        ErrorMessage("Give a correctttt input", 1000);
+                        Console.Clear();
+                        OrderMenu();
+                    }
                 }
             }
             return order;
@@ -464,6 +496,25 @@ namespace FirstProject
             Console.WriteLine($"{errorInfo}");
             Thread.Sleep(sleepTimer);
             Console.ResetColor();
+        }
+
+        public int StartingIdNumber()
+        {
+            int startingNumber;
+
+            if (!File.Exists("C:\\Dev\\Movies.txt"))
+            {
+                startingNumber = 1;
+            }
+            else
+            {
+                OnlineStore onlineStore = new OnlineStore();
+                List<string> myMovies = onlineStore.RetriveMovieLog("C:\\Dev\\Movies.txt");
+                string[] myFirstMovie = myMovies[0].Split(',');
+                startingNumber = int.Parse(myFirstMovie[0]);
+
+            }
+            return startingNumber;
         }
     }
 }

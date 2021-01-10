@@ -2,7 +2,7 @@
 
 namespace FirstProject
 {
-    public class Order
+    public class Order 
     {
         public int ID { get; set; }
 
