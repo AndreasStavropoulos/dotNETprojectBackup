@@ -11,20 +11,6 @@ namespace FirstProject
             write.WriteLine(textToWriteFile);
         }
 
-        public List<string> ReadDataFromFile(string path)
-        {
-            using StreamReader reader = new StreamReader(path);
-            string line = string.Empty;
-
-            List<string> lines = new List<string>();
-
-            while ((line = reader.ReadLine()) != null)
-            {
-                lines.Add(line);
-            }
-            return lines;
-        }
-
         public void DeleteFile(string file)
         {
             if (File.Exists(file))
